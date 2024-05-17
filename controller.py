@@ -35,5 +35,28 @@ class ControllerCadastro():
         if dados_verificados != 1: #o 1 é sucesso no cadastro, mas se for diferente disto, irá retornar o valor do respectivo erro
             return dados_verificados
         
+        try:
+            senha = hashlib.sha256(senha.encode()).hexdigest() #criptografa a senha do usuário
+            pessoa = Pessoa(nome = nome, email = email, senha = senha) #instancia a classe Pessoa
+            session.add(pessoa) #cria uma sessão para inserir no banco
+            session.commit() #cria uma sessão para enviar os dados para o banco
+            return 1
+            
+        except:
+            return 3
         
-    
+
+class ControllerLogin():
+    @classmethod
+    def login(cls, email, senha):
+        session = retorna_session() #cria uma instância de session
+        senha = hashlib.sha256(senha.encode()).hexdigest()
+        usuario_logado = session.query(Pessoa).filter(Pessoa.email == email).filter(Pessoa.senha == senha).all()
+        
+        if len(usuario_logado) == 1:
+            return {'logado': True, 'id':usuario_logado[0].id}
+        else:
+            return False
+        
+        
+print(ControllerCadastro.cadastrar('Maria', 'maria@gmail.com', 'maria@123'))
