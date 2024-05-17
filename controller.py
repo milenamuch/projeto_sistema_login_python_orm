@@ -43,7 +43,7 @@ class ControllerCadastro():
             return 1
             
         except:
-            return 3
+            return 6
         
 
 class ControllerLogin():
